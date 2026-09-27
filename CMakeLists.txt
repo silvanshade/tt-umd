@@ -156,7 +156,11 @@ endif()
 
 set(TT_X86_MARCH "x86-64-v3" CACHE STRING "x86_64 architecture passed to -march")
 
+# perf user-callchain sampling follows the frame pointer; reusing it for a BAR address can trigger stray MMIO reads.
+# Preserve normal and leaf frames in all UMD build types, regardless of Tracy.
 add_compile_options(
+    "$<$<COMPILE_LANGUAGE:C,CXX>:-fno-omit-frame-pointer>"
+    "$<$<COMPILE_LANGUAGE:C,CXX>:-mno-omit-leaf-frame-pointer>"
     "$<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=${TT_X86_MARCH}>"
     -Wall
     -Wno-sign-compare

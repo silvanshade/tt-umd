@@ -61,6 +61,8 @@ cmake -B build -G Ninja
 cmake --build build
 ```
 
+UMD source builds retain normal and leaf frame pointers in every build configuration, independently of Tracy. Linux perf frame-pointer callchain sampling (for example, `perf record -g`) follows the frame-pointer register; allowing optimized MMIO code to reuse it for a PCIe BAR pointer can cause unintended device reads. The build therefore enables `-fno-omit-frame-pointer` and `-mno-omit-leaf-frame-pointer` for UMD-owned C and C++ targets.
+
 To build all components (some are turned off by default, like tests), you can run these commands:
 ```
 cmake -B build -G Ninja -DTT_UMD_BUILD_ALL=ON
